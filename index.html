@@ -33,6 +33,46 @@
       text-align: center;
     }
 
+    .form-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .form-row label {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.85;
+      text-align: right;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 0.6rem 2rem 0.6rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      background: #334155;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .toggle-pass {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--accent);
+      user-select: none;
+    }
+
     .btn, .btn-signin {
       margin-top: 1rem;
       padding: 0.7rem 1.2rem;
@@ -45,6 +85,7 @@
       transition: background 0.3s ease;
       display: inline-block;
       text-decoration: none;
+      width: 100%;
     }
     .btn:hover, .btn-signin:hover {
       background: #0ea5e9;
@@ -52,26 +93,33 @@
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Login</h2>
-    <form onsubmit="handleSubmit(event)">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" autocomplete="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" autocomplete="current-password" required />
-        <span class="toggle-pass" onclick="togglePassword()">👁️</span>
-      </div>
-      <button type="submit" class="btn">Masuk</button>
-    </form>
-    <p class="note">Landing Page Custom By Rangga.</p>
-    <!-- Tombol Sign In -->
-    <a href="#" class="btn-signin" id="signBtn">Sign In (Tidak punya akun?)</a>
+  <div id="mainContent">
+    <div class="login-box">
+      <h2>Login</h2>
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <label for="username">Username</label>
+          <div class="input-wrap">
+            <input type="text" id="username" name="username" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" required />
+            <span class="toggle-pass" onclick="togglePassword()">👁️</span>
+          </div>
+        </div>
+        <button type="submit" class="btn">Masuk</button>
+      </form>
+      <p class="note">Landing Page Custom By Rangga.</p>
+      <a href="#" class="btn-signin" id="signBtn">Sign In (Tidak punya akun?)</a>
+    </div>
   </div>
 
   <script>
+    const mainContentHTML = document.getElementById("mainContent").innerHTML;
+
     function togglePassword() {
       const passInput = document.getElementById('password');
       const toggle = document.querySelector('.toggle-pass');
@@ -85,22 +133,30 @@
     }
 
     function handleSubmit(event) {
-      event.preventDefault(); // cegah reload
+      event.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       alert(`Username: ${username}\nPassword: ${password}`);
-      // Di sini bisa diganti dengan proses login ke server
     }
 
-    // Saat tombol Sign In ditekan, ganti seluruh isi body dengan gambar sswa.jpg
-    document.getElementById("signBtn").addEventListener("click", function(e) {
-      e.preventDefault();
-      document.body.innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;">
-          <img src="sswa.png" alt="Sign In Image" style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.6);" />
-        </div>
-      `;
-    });
+    function bindSignBtn() {
+      document.getElementById("signBtn").addEventListener("click", function(e) {
+        e.preventDefault();
+        document.body.innerHTML = `
+          <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#000;gap:20px;">
+            <img src="sswa.png" alt="Sign In Image" style="max-width:90%;max-height:80%;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.6);" />
+            <button id="backBtn" style="padding:0.7rem 1.2rem;background:#38bdf8;color:#0f172a;font-weight:600;border:none;border-radius:6px;cursor:pointer;">⬅ Back</button>
+          </div>
+        `;
+        document.getElementById("backBtn").addEventListener("click", function() {
+          document.body.innerHTML = `<div id="mainContent">${mainContentHTML}</div>`;
+          bindSignBtn(); // re-bind lagi setelah kembali
+        });
+      });
+    }
+
+    // pertama kali bind
+    bindSignBtn();
   </script>
 </body>
 </html>
