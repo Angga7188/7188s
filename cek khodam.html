@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cek Khodam – Fun Only</title>
+  <meta name="description" content="Cek khodam lucu untuk hiburan. Masukkan nama, lihat hasil acak." />
+
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --card: #121826;
+      --accent: #5eead4;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+      --focus: #93c5fd;
+    }
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% 10%, #1b2537, var(--bg));
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .app {
+      width: 100%;
+      max-width: 720px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    }
+    .title {
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: 0.2px;
+    }
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+    }
+    .form {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+    label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      background: rgba(18, 24, 38, 0.6);
+      outline: none;
+      transition: border-color 140ms ease, box-shadow 140ms ease;
+    }
+    input[type="text"]::placeholder { color: #6b7280 }
+    input[type="text"]:focus {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.2);
+    }
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #22d3ee, #14b8a6);
+      color: #0b0f17;
+      box-shadow: 0 10px 20px rgba(34,211,238,0.25);
+    }
+    .btn-primary:hover { transform: translateY(-1px) }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+    .result {
+      margin-top: 18px;
+      border-top: 1px dashed rgba(255,255,255,0.12);
+      padding-top: 16px;
+      display: none;
+    }
+    .result.show { display: block }
+    .khodam-name {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(94, 234, 212, 0.12);
+      border: 1px solid rgba(94, 234, 212, 0.35);
+      color: var(--accent);
+      margin-top: 10px;
+    }
+    .note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .error {
+      color: var(--danger);
+      font-size: 13px;
+    }
+    .footer {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    /* Simple animation */
+    .fade-in { animation: fadeIn 220ms ease-out both }
+    @keyframes fadeIn { from {opacity: 0; transform: translateY(4px)} to {opacity: 1; transform: none} }
+  </style>
+</head>
+<body>
+  <main class="app" role="main">
+    <section class="card" aria-labelledby="title">
+      <h1 id="title" class="title">Portal Cek Khodam</h1>
+      <p class="subtitle">Masukkan nama lengkap kamu, klik “Cek Khodam”, lalu nikmati hasil acak yang menghibur.</p>
+
+      <form class="form" id="form" novalidate>
+        <div>
+          <label for="nama">Nama kamu</label>
+          <input id="nama" name="nama" type="text" placeholder="Contoh: ASEP" autocomplete="name" aria-describedby="err" />
+          <div id="err" class="error" role="alert" aria-live="polite"></div>
+        </div>
+
+        <div class="row">
+          <button type="submit" class="btn btn-primary">Cek Khodam</button>
+          <button type="button" class="btn btn-secondary" id="reset">Reset</button>
+        </div>
+      </form>
+
+      <div id="result" class="result fade-in" aria-live="polite" aria-atomic="true">
+        <div class="khodam-name" id="khodamName"></div>
+        <div class="badge" id="khodamAura"></div>
+        <p class="note">Hasil ini hanya untuk hiburan. Jangan dijadikan acuan spiritual atau keputusan hidup ya.</p>
+      </div>
+
+      <p class="footer">© 2025 — Dibuat untuk hiburan. No tracking, no nonsense.</p>
+    </section>
+  </main>
+
+  <script>
+    // ====== Data yang bisa kamu kustom ======
+    const KHODAMS = [
+      { name: "Harimau Putih Penjaga Senja", aura: "Aura: Tenang • Elemen: Angin • Warna: Biru lembut" },
+      { name: "Garuda Cakra Langit", aura: "Aura: Berani • Elemen: Api • Warna: Emas kemerahan" },
+      { name: "Naga Samudra Nusantara", aura: "Aura: Bijak • Elemen: Air • Warna: Turquoise" },
+      { name: "Macan Kembang Prawira", aura: "Aura: Tangguh • Elemen: Tanah • Warna: Hijau zaitun" },
+      { name: "Kijang Rimba Kilau", aura: "Aura: Lincah • Elemen: Kayu • Warna: Hijau muda" },
+      { name: "Elang Senja Nusaraya", aura: "Aura: Fokus • Elemen: Udara • Warna: Ungu tua" },
+      { name: "Gajah Ananta Bhumi", aura: "Aura: Stabil • Elemen: Bumi • Warna: Coklat hangat" },
+      { name: "Luwak Penyelaras Malam", aura: "Aura: Kreatif • Elemen: Ether • Warna: Indigo" },
+      { name: "Kuda Sinar Purnama", aura: "Aura: Gesit • Elemen: Cahaya • Warna: Perak" },
+      { name: "Kura-kura Penjaga Pantai", aura: "Aura: Sabar • Elemen: Air • Warna: Biru toska" },
+    ];
+
+    // Generator deterministik: sama nama → sama hasil
+    // Hash sederhana untuk “seed”
+    function hashName(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+      }
+      return Math.abs(h >>> 0);
+    }
+
+    function pickKhodam(seed) {
+      const idx = seed % KHODAMS.length;
+      return KHODAMS[idx];
+    }
+
+    const form = document.getElementById("form");
+    const input = document.getElementById("nama");
+    const err = document.getElementById("err");
+    const result = document.getElementById("result");
+    const khodamName = document.getElementById("khodamName");
+    const khodamAura = document.getElementById("khodamAura");
+    const resetBtn = document.getElementById("reset");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      err.textContent = "";
+
+      const name = (input.value || "").trim();
+      if (!name) {
+        err.textContent = "Nama tidak boleh kosong.";
+        input.focus();
+        return;
+      }
+      if (name.length < 3) {
+        err.textContent = "Minimal 3 karakter ya.";
+        input.focus();
+        return;
+      }
+
+      // Simulasi loading ringan
+      khodamName.textContent = "Memanggil energi…";
+      khodamAura.textContent = "Mengalirkan aura…";
+      result.classList.add("show");
+
+      setTimeout(() => {
+        const seed = hashName(name.toLowerCase());
+        const khodam = pickKhodam(seed);
+        khodamName.textContent = `${khodam.name} untuk ${name}`;
+        khodamAura.textContent = khodam.aura;
+      }, 600);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      input.value = "";
+      err.textContent = "";
+      result.classList.remove("show");
+      input.focus();
+    });
+
+    // Aksesibilitas: submit dengan Enter dan fokus awal
+    window.addEventListener("DOMContentLoaded", () => {
+      input.focus();
+    });
+  </script>
+</body>
+</html>
